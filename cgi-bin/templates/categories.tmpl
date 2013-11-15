@@ -1,0 +1,23 @@
+<table border="1" cellpadding="5" cellspacing="5" style="width: 100%;">
+    <tr>
+        <th>Name</th>
+        <th>Description</th>
+        <th><a href="?action=add">Add Category</a></th>
+    </tr>
+    <TMPL_IF hascategories>
+    <TMPL_LOOP categories>
+    <tr>
+        <td><TMPL_VAR NAME=name></td>
+        <td><TMPL_VAR NAME=description></td>
+        <td>
+            <a href="?action=edit&id=<TMPL_VAR NAME=id>">Edit</a>
+            <a href="?action=del&id=<TMPL_VAR NAME=id>" onclick="return confirm('Are you sure you want to delete this category?');">Delete</a>
+        </td>
+    </tr>
+    </TMPL_LOOP>
+    <TMPL_ELSE>
+        <tr>
+            <td colspan="3" align="center">No categories found</td>
+        </tr>
+    </TMPL_IF>
+</table>

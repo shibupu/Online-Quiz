@@ -1,0 +1,22 @@
+<script type="text/javascript" src="/quiz/js/category.js"></script>
+
+<form name="category" action="" method="post">
+    <table>
+        <tr>
+            <td>Name</td>
+            <td><input type="text" name="name" id="name" value="<TMPL_VAR NAME=name>" title="Name" /></td>
+        </tr>
+        <tr>
+            <td>Description</td>
+            <td><textarea name="description" id="description" title="Description"><TMPL_VAR NAME=description></textarea></td>
+        </tr>
+        <tr>
+            <td align="right"><input type="button" value="Back" onclick="back_form();" /></td>
+            <td>
+                <input type="hidden" name="id" value="<TMPL_VAR NAME=id>" />
+                <input type="hidden" name="action" id="action" value="<TMPL_VAR NAME=action>" />
+                <input type="button" value="<TMPL_VAR NAME=button>" onclick="validate_form();" />
+            </td>
+        </tr>
+    </table>
+</form>

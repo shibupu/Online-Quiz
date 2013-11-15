@@ -1,0 +1,116 @@
+#!/usr/bin/perl
+
+use lib "./lib";
+use strict;
+
+use CGI;
+use CGI::Carp qw(fatalsToBrowser);
+use Conf;
+use Database;
+
+require "common.pl";
+
+my $q  = new CGI;
+my $db = new Database;
+
+my $action = $q->param('action');
+my $id     = $q->param('id');
+
+print $q->header;
+
+template('header');
+
+if ($action ~~ ['add', 'edit']) {
+    add_edit($action);
+}
+elsif ($action) {
+    eval "$action()";
+    list();
+}
+else {
+    list();
+}
+
+template('footer');
+
+sub list {
+    my $sth = $db->{dbh}->prepare(qq{
+        SELECT
+            id,
+            name,
+            description
+        FROM
+            category
+    });
+    $sth->execute;
+
+    my $param;
+    if ($sth->rows) {
+        $param->{hascategories} = 1;
+
+        my $array_ref = $sth->fetchall_arrayref({});
+        $param->{categories} = $array_ref;
+
+        #while (my $hash_ref = $sth->fetchrow_hashref) {
+        # push @{$param->{employees}}, $hash_ref;
+        #}
+    }
+
+    template('categories', $param);
+}
+
+sub add_edit {
+    my $action = shift;
+    my $param;
+
+    if (($action eq 'edit') && $id) {
+        $param = $db->{dbh}->selectrow_hashref(qq{
+            SELECT
+                id,
+                name,
+                description
+            FROM
+                category
+            WHERE
+                id = ?
+        }, undef, $id);
+
+        $param->{button} = 'Update';
+        $param->{action} = 'update';
+    }
+    else {
+        $param->{button} = 'Add';
+        $param->{action} = 'insert';
+    }
+
+    template('category', $param);
+}
+
+sub insert {
+    my $params = $q->Vars;
+    my $data = {
+        name        => $params->{name},
+        description => $params->{description}
+    };
+
+    my $rows = $db->insert('category', $data);
+}
+
+sub update {
+    if ($id) {
+        my $params = $q->Vars;
+        my $data = {
+            name        => $params->{name},
+            description => $params->{description}
+        };
+        my $cond = { id => $id };
+
+        my $rows = $db->update('category', $data, $cond);
+    }
+}
+
+sub del {
+    if ($id) {
+        my $rows = $db->delete('category', 'id', $id);
+    }
+}
