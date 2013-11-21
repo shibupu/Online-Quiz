@@ -2,6 +2,7 @@ CREATE TABLE `quiz` (
     `id` mediumint(8) unsigned NOT NULL AUTO_INCREMENT,
     `user_id` mediumint(8) unsigned NOT NULL,
     `category_id` mediumint(8) unsigned NOT NULL,
+    `number_of_questions` tinyint(3) unsigned NOT NULL,
     `date_created` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
     PRIMARY KEY (`id`),
     KEY `user_id` (`user_id`),
